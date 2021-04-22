@@ -3,13 +3,13 @@ import { ptBR } from 'date-fns/locale'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-
-import { api } from '../../service/api'
-import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString'
-import styles from '../../styles/episode.module.scss'
-import ReactTooltip from 'react-tooltip'
 import { useContext } from 'react'
+import ReactTooltip from 'react-tooltip'
+
 import { PlayerContext } from '../../contexts/PlayerContext'
+import { api } from '../../service/api'
+import styles from '../../styles/episode.module.scss'
+import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString'
 
 interface ConvertedEpisodeProps {
   id: string
@@ -32,39 +32,36 @@ export default function Episode({ episode }: EpisodeProps) {
 
   const isEpisodePlaying = currentEpisodeId === episode.id && isPlaying
 
-  return(
+  return (
     <div className={styles.episodeContainer}>
-      <ReactTooltip effect="solid" backgroundColor="rgba(0, 0, 0, 0.7)" place="bottom"/>
+      <ReactTooltip effect="solid" backgroundColor="rgba(0, 0, 0, 0.7)" place="bottom" />
 
       <div className={styles.episode}>
         <div className={styles.thumbnailContainer}>
           <Link href="/">
             <button data-tip="Voltar" type="button">
-              <img src="/arrow-left.svg" alt="Voltar"/>
+              <img src="/arrow-left.svg" alt="Voltar" />
             </button>
           </Link>
 
-          <Image
-            width={700}
-            height={160}
-            src={episode.thumbnail}
-            objectFit="cover"
-          />
+          <Image width={700} height={160} src={episode.thumbnail} objectFit="cover" />
 
-          <button data-tip={isEpisodePlaying ? "Pausar episódio" : "Tocar episódio"} onClick={() => {
-            if(isEpisodePlaying) {
-              togglePlay()
-            } else {
-              play(episode)
-            }
-          }} type="button">
-            {
-              isEpisodePlaying ? (
-                <img src="/pause.svg" alt="Pausar episódio"/>
-              ) : (
-                <img src="/play.svg" alt="Tocar episódio"/>
-              )
-            }
+          <button
+            data-tip={isEpisodePlaying ? 'Pausar episódio' : 'Tocar episódio'}
+            onClick={() => {
+              if (isEpisodePlaying) {
+                togglePlay()
+              } else {
+                play(episode)
+              }
+            }}
+            type="button"
+          >
+            {isEpisodePlaying ? (
+              <img src="/pause.svg" alt="Pausar episódio" />
+            ) : (
+              <img src="/play.svg" alt="Tocar episódio" />
+            )}
           </button>
         </div>
 
@@ -90,20 +87,20 @@ export const getStaticPaths: GetStaticPaths = async () => {
       _limit: 2,
       _sort: 'published_at',
       _order: 'desc',
-    }
+    },
   })
 
-  const paths = data.map(episode => {
+  const paths = data.map((episode) => {
     return {
       params: {
-        slug: episode.id
-      }
+        slug: episode.id,
+      },
     }
   })
 
   return {
     paths,
-    fallback: 'blocking'
+    fallback: 'blocking',
   }
 }
 
@@ -117,13 +114,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     title: data.title,
     thumbnail: data.thumbnail,
     members: data.members,
-    publishedAt: format(parseISO(data.published_at), "d MMM yy", {
+    publishedAt: format(parseISO(data.published_at), 'd MMM yy', {
       locale: ptBR,
     }),
     description: data.description,
     durationAsString: convertDurationToTimeString(Number(data.file.duration)),
     duration: Number(data.file.duration),
-    url: data.file.url
+    url: data.file.url,
   }
 
   return {

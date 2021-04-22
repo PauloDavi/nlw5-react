@@ -1,15 +1,14 @@
-import { AppProps } from 'next/dist/next-server/lib/router/router';
-import NProgress from 'nprogress'
 import { Router } from 'next/dist/client/router'
-import { useEffect, useState } from 'react';
+import { AppProps } from 'next/dist/next-server/lib/router/router'
+import NProgress from 'nprogress'
+import { useEffect, useState } from 'react'
 
 import '../styles/globals.scss'
 import 'nprogress/nprogress.css'
+import { Header } from '../components/Header'
+import { Player } from '../components/Player'
+import { PlayerContext } from '../contexts/PlayerContext'
 import styles from '../styles/app.module.scss'
-
-import { Header } from "../components/Header";
-import { Player } from "../components/Player";
-import { PlayerContext } from "../contexts/PlayerContext";
 
 interface EpisodeProps {
   id: string
@@ -44,10 +43,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [currentEpisodeId, setCurrentEpisodeId] = useState('')
 
   useEffect(() => {
-    if(!episodeList || episodeList.length === 0) {
+    if (!episodeList || episodeList.length === 0) {
       return
     }
-    console.log(episodeList)
 
     setCurrentEpisodeId(episodeList[currentEpisodeIndex].id)
   }, [setCurrentEpisodeId, episodeList, currentEpisodeIndex])
@@ -59,7 +57,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   function togglePlay() {
-    setIsPlaying(e => !e)
+    setIsPlaying((e) => !e)
   }
 
   function setPlayingState(state: boolean) {
@@ -67,19 +65,21 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <PlayerContext.Provider value={{
-      currentEpisodeIndex,
-      episodeList,
-      isPlaying,
-      currentEpisodeId,
-      setPlayingState,
-      togglePlay,
-      play
-    }}>
+    <PlayerContext.Provider
+      value={{
+        currentEpisodeIndex,
+        episodeList,
+        isPlaying,
+        currentEpisodeId,
+        setPlayingState,
+        togglePlay,
+        play,
+      }}
+    >
       <div className={styles.appWrapper}>
         <main>
           <Header />
-          <Component {...pageProps}/>
+          <Component {...pageProps} />
         </main>
 
         <Player />

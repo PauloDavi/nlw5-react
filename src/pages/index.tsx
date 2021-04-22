@@ -1,15 +1,15 @@
-import { format, parseISO } from "date-fns"
-import ptBR from "date-fns/locale/pt-BR"
-import { GetStaticProps } from "next"
-import Link from "next/link"
-import Image from "next/image"
+import { format, parseISO } from 'date-fns'
+import ptBR from 'date-fns/locale/pt-BR'
+import { GetStaticProps } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useContext } from 'react'
+import ReactTooltip from 'react-tooltip'
 
-import { api } from "../service/api"
+import { PlayerContext } from '../contexts/PlayerContext'
+import { api } from '../service/api'
 import styles from '../styles/home.module.scss'
-import { convertDurationToTimeString } from "../utils/convertDurationToTimeString"
-import { useContext } from "react"
-import { PlayerContext } from "../contexts/PlayerContext"
-import ReactTooltip from "react-tooltip"
+import { convertDurationToTimeString } from '../utils/convertDurationToTimeString'
 
 interface ConvertedEpisodeProps {
   id: string
@@ -32,53 +32,49 @@ export default function Home({ allEpisodes, latestEpisodes }: HomeProps) {
 
   return (
     <div className={styles.homepage}>
-      <ReactTooltip effect="solid" backgroundColor="rgba(0, 0, 0, 0.7)" place="bottom"/>
+      <ReactTooltip effect="solid" backgroundColor="rgba(0, 0, 0, 0.7)" place="bottom" />
 
       <section className={styles.latestEpisodes}>
         <h2>Últimos Lançamentos</h2>
 
         <ul>
-          {
-            latestEpisodes.map(episode => {
-              const isEpisodePlaying = currentEpisodeId === episode.id && isPlaying
+          {latestEpisodes.map((episode) => {
+            const isEpisodePlaying = currentEpisodeId === episode.id && isPlaying
 
-              return (
-                <li key={episode.id}>
-                  <Image
-                    src={episode.thumbnail}
-                    alt={episode.title}
-                    width={192}
-                    height={192}
-                  />
+            return (
+              <li key={episode.id}>
+                <Image src={episode.thumbnail} alt={episode.title} width={192} height={192} />
 
-                  <div className={styles.episodeDetails}>
-                    <Link href={`/episodes/${episode.id}`}>
-                      <a>{episode.title}</a>
-                    </Link>
-                    <p data-tip={episode.members}>{episode.members}</p>
-                    <span>{episode.publishedAt}</span>
-                    <span>{episode.durationAsString}</span>
-                  </div>
+                <div className={styles.episodeDetails}>
+                  <Link href={`/episodes/${episode.id}`}>
+                    <a>{episode.title}</a>
+                  </Link>
+                  <p data-tip={episode.members}>{episode.members}</p>
+                  <span>{episode.publishedAt}</span>
+                  <span>{episode.durationAsString}</span>
+                </div>
 
-                  <button className={isEpisodePlaying ? styles.pauseIconButton : ""} data-tip={isEpisodePlaying ? "Pausar episódio" : "Tocar episódio"} onClick={() => {
-                    if(isEpisodePlaying) {
+                <button
+                  className={isEpisodePlaying ? styles.pauseIconButton : ''}
+                  data-tip={isEpisodePlaying ? 'Pausar episódio' : 'Tocar episódio'}
+                  onClick={() => {
+                    if (isEpisodePlaying) {
                       togglePlay()
                     } else {
                       play(episode)
                     }
-                  }} type="button">
-                    {
-                      isEpisodePlaying ? (
-                        <img src="/pause.svg" alt="Pausar episódio"/>
-                      ) : (
-                        <img src="/play-green.svg" alt="Tocar episódio"/>
-                      )
-                    }
-                  </button>
-                </li>
-              )
-            })
-          }
+                  }}
+                  type="button"
+                >
+                  {isEpisodePlaying ? (
+                    <img src="/pause.svg" alt="Pausar episódio" />
+                  ) : (
+                    <img src="/play-green.svg" alt="Tocar episódio" />
+                  )}
+                </button>
+              </li>
+            )
+          })}
         </ul>
       </section>
 
@@ -97,49 +93,45 @@ export default function Home({ allEpisodes, latestEpisodes }: HomeProps) {
             </tr>
           </thead>
           <tbody>
-            {
-              allEpisodes.map(episode => {
-                const isEpisodePlaying = currentEpisodeId === episode.id && isPlaying
+            {allEpisodes.map((episode) => {
+              const isEpisodePlaying = currentEpisodeId === episode.id && isPlaying
 
-                return (
-                  <tr key={episode.id}>
-                    <td style={{ width: 72 }}>
-                      <Image
-                        width={72}
-                        height={72}
-                        src={episode.thumbnail}
-                        alt={episode.title}
-                      />
-                    </td>
-                    <td>
-                      <Link href={`/episodes/${episode.id}`}>
-                        <a>{episode.title}</a>
-                      </Link>
-                    </td>
-                    <td>{episode.members}</td>
-                    <td style={{ width: 100 }}>{episode.publishedAt}</td>
-                    <td>{episode.durationAsString}</td>
-                    <td>
-                      <button className={isEpisodePlaying ? styles.pauseIconButton : ""} data-tip={isEpisodePlaying ? "Pausar episódio" : "Tocar episódio"} onClick={() => {
-                        if(isEpisodePlaying) {
+              return (
+                <tr key={episode.id}>
+                  <td style={{ width: 72 }}>
+                    <Image width={72} height={72} src={episode.thumbnail} alt={episode.title} />
+                  </td>
+                  <td>
+                    <Link href={`/episodes/${episode.id}`}>
+                      <a>{episode.title}</a>
+                    </Link>
+                  </td>
+                  <td>{episode.members}</td>
+                  <td style={{ width: 100 }}>{episode.publishedAt}</td>
+                  <td>{episode.durationAsString}</td>
+                  <td>
+                    <button
+                      className={isEpisodePlaying ? styles.pauseIconButton : ''}
+                      data-tip={isEpisodePlaying ? 'Pausar episódio' : 'Tocar episódio'}
+                      onClick={() => {
+                        if (isEpisodePlaying) {
                           togglePlay()
                         } else {
                           play(episode)
                         }
-                      }} type="button">
-                        {
-                          isEpisodePlaying ? (
-                            <img className="green-icon" src="/pause.svg" alt="Pausar episódio"/>
-                          ) : (
-                            <img src="/play-green.svg" alt="Tocar episódio"/>
-                          )
-                        }
-                      </button>
-                    </td>
-                  </tr>
-                )
-              })
-            }
+                      }}
+                      type="button"
+                    >
+                      {isEpisodePlaying ? (
+                        <img className="green-icon" src="/pause.svg" alt="Pausar episódio" />
+                      ) : (
+                        <img src="/play-green.svg" alt="Tocar episódio" />
+                      )}
+                    </button>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </section>
@@ -151,27 +143,25 @@ export const getStaticProps: GetStaticProps = async () => {
   const { data } = await api.get('episodes', {
     params: {
       _limit: 12,
-      _sort: "published_at",
-      _order: "desc",
-    }
+      _sort: 'published_at',
+      _order: 'desc',
+    },
   })
 
-
-  const episodes = data.map(episode => {
+  const episodes = data.map((episode) => {
     return {
       id: episode.id,
       title: episode.title,
       thumbnail: episode.thumbnail,
       members: episode.members,
-      publishedAt: format(parseISO(episode.published_at), "d MMM yy", {
+      publishedAt: format(parseISO(episode.published_at), 'd MMM yy', {
         locale: ptBR,
       }),
       durationAsString: convertDurationToTimeString(Number(episode.file.duration)),
       duration: Number(episode.file.duration),
-      url: episode.file.url
+      url: episode.file.url,
     }
   })
-
 
   const latestEpisodes = episodes.slice(0, 2)
   const allEpisodes = episodes.slice(2, episodes.length)

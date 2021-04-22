@@ -7,16 +7,16 @@ import styles from './styles.module.scss'
 
 export function Header() {
   const currentDate = format(new Date(), 'EEEEEE, d MMM', {
-    locale: ptBR
+    locale: ptBR,
   })
 
-  return(
+  return (
     <header className={styles.headerContainer}>
-      <ReactTooltip effect="solid" backgroundColor="rgba(0, 0, 0, 0.7)" place="bottom"/>
+      <ReactTooltip effect="solid" backgroundColor="rgba(0, 0, 0, 0.7)" place="bottom" />
 
       <Link href="/">
         <button data-tip="Início" type="button">
-          <img src="/logo.svg" alt="Podcastr"/>
+          <img src="/logo.svg" alt="Podcastr" />
         </button>
       </Link>
 

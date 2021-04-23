@@ -1,12 +1,12 @@
 import { format, parseISO } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 import { GetStaticProps } from 'next'
+import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useContext } from 'react'
 import ReactTooltip from 'react-tooltip'
 
-import { PlayerContext } from '../contexts/PlayerContext'
+import { usePlayer } from '../contexts/PlayerContext'
 import { api } from '../service/api'
 import styles from '../styles/home.module.scss'
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString'
@@ -28,22 +28,34 @@ interface HomeProps {
 }
 
 export default function Home({ allEpisodes, latestEpisodes }: HomeProps) {
-  const { play, togglePlay, currentEpisodeId, isPlaying } = useContext(PlayerContext)
+  const { playList, togglePlay, currentEpisodeId, isPlaying } = usePlayer()
+
+  const episodeList = [...latestEpisodes, ...allEpisodes]
 
   return (
     <div className={styles.homepage}>
+      <Head>
+        <title>Home | Podcastr</title>
+      </Head>
+
       <ReactTooltip effect="solid" backgroundColor="rgba(0, 0, 0, 0.7)" place="bottom" />
 
       <section className={styles.latestEpisodes}>
         <h2>Últimos Lançamentos</h2>
 
         <ul>
-          {latestEpisodes.map((episode) => {
+          {latestEpisodes.map((episode, index) => {
             const isEpisodePlaying = currentEpisodeId === episode.id && isPlaying
 
             return (
               <li key={episode.id}>
-                <Image src={episode.thumbnail} alt={episode.title} width={192} height={192} />
+                <Image
+                  priority
+                  src={episode.thumbnail}
+                  alt={episode.title}
+                  width={192}
+                  height={192}
+                />
 
                 <div className={styles.episodeDetails}>
                   <Link href={`/episodes/${episode.id}`}>
@@ -61,7 +73,7 @@ export default function Home({ allEpisodes, latestEpisodes }: HomeProps) {
                     if (isEpisodePlaying) {
                       togglePlay()
                     } else {
-                      play(episode)
+                      playList(episodeList, index)
                     }
                   }}
                   type="button"
@@ -93,7 +105,7 @@ export default function Home({ allEpisodes, latestEpisodes }: HomeProps) {
             </tr>
           </thead>
           <tbody>
-            {allEpisodes.map((episode) => {
+            {allEpisodes.map((episode, index) => {
               const isEpisodePlaying = currentEpisodeId === episode.id && isPlaying
 
               return (
@@ -117,7 +129,7 @@ export default function Home({ allEpisodes, latestEpisodes }: HomeProps) {
                         if (isEpisodePlaying) {
                           togglePlay()
                         } else {
-                          play(episode)
+                          playList(episodeList, index + latestEpisodes.length)
                         }
                       }}
                       type="button"

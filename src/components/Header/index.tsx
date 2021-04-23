@@ -1,11 +1,15 @@
 import { format } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
 import Link from 'next/link'
+import Toggle from 'react-toggle'
 import ReactTooltip from 'react-tooltip'
 
+import { useTheme } from '../../contexts/ThemeContext'
 import styles from './styles.module.scss'
 
 export function Header() {
+  const { theme, toggleTheme } = useTheme()
+
   const currentDate = format(new Date(), 'EEEEEE, d MMM', {
     locale: ptBR,
   })
@@ -16,13 +20,23 @@ export function Header() {
 
       <Link href="/">
         <button data-tip="Início" type="button">
-          <img src="/logo.svg" alt="Podcastr" />
+          <img src={theme === 'dark' ? '/dark-logo.svg' : '/logo.svg'} alt="Podcastr" />
         </button>
       </Link>
 
       <p>O melhor para você ouvir, sempre</p>
 
       <span>{currentDate}</span>
+
+      <Toggle
+        className={styles.customToggle}
+        checked={theme === 'light'}
+        icons={{
+          checked: <img src="/sun.svg" alt="Tema claro" />,
+          unchecked: <img src="/moon.svg" alt="Tema escuro" />,
+        }}
+        onChange={toggleTheme}
+      />
     </header>
   )
 }

@@ -1,23 +1,14 @@
 import { Router } from 'next/dist/client/router'
 import { AppProps } from 'next/dist/next-server/lib/router/router'
 import NProgress from 'nprogress'
-import { useEffect, useState } from 'react'
 
 import '../styles/globals.scss'
 import 'nprogress/nprogress.css'
 import { Header } from '../components/Header'
 import { Player } from '../components/Player'
-import { PlayerContext } from '../contexts/PlayerContext'
+import { PlayerContextProvider } from '../contexts/PlayerContext'
+import { ThemeContextProvider } from '../contexts/ThemeContext'
 import styles from '../styles/app.module.scss'
-
-interface EpisodeProps {
-  id: string
-  title: string
-  members: string
-  thumbnail: string
-  duration: number
-  url: string
-}
 
 NProgress.configure({
   showSpinner: false,
@@ -37,54 +28,19 @@ Router.events.on('routeChangeError', () => {
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [currentEpisodeIndex, setCurrentEpisodeIndex] = useState(0)
-  const [episodeList, setEpisodeList] = useState<EpisodeProps[]>([])
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentEpisodeId, setCurrentEpisodeId] = useState('')
-
-  useEffect(() => {
-    if (!episodeList || episodeList.length === 0) {
-      return
-    }
-
-    setCurrentEpisodeId(episodeList[currentEpisodeIndex].id)
-  }, [setCurrentEpisodeId, episodeList, currentEpisodeIndex])
-
-  function play(episode: EpisodeProps) {
-    setEpisodeList([episode])
-    setCurrentEpisodeIndex(0)
-    setIsPlaying(true)
-  }
-
-  function togglePlay() {
-    setIsPlaying((e) => !e)
-  }
-
-  function setPlayingState(state: boolean) {
-    setIsPlaying(state)
-  }
-
   return (
-    <PlayerContext.Provider
-      value={{
-        currentEpisodeIndex,
-        episodeList,
-        isPlaying,
-        currentEpisodeId,
-        setPlayingState,
-        togglePlay,
-        play,
-      }}
-    >
-      <div className={styles.appWrapper}>
-        <main>
-          <Header />
-          <Component {...pageProps} />
-        </main>
+    <ThemeContextProvider>
+      <PlayerContextProvider>
+        <div className={styles.appWrapper}>
+          <main>
+            <Header />
+            <Component {...pageProps} />
+          </main>
 
-        <Player />
-      </div>
-    </PlayerContext.Provider>
+          <Player />
+        </div>
+      </PlayerContextProvider>
+    </ThemeContextProvider>
   )
 }
 

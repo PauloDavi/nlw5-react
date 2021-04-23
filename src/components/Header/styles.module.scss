@@ -23,6 +23,13 @@
 
   span {
     margin-left: auto;
+    margin-right: 1rem;
     text-transform: capitalize;
+  }
+}
+
+.customToggle {
+  > div .react-toggle--checked .react-toggle-track {
+    font-size: 0;
   }
 }

@@ -1,12 +1,12 @@
 import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { GetStaticPaths, GetStaticProps } from 'next'
+import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useContext } from 'react'
 import ReactTooltip from 'react-tooltip'
 
-import { PlayerContext } from '../../contexts/PlayerContext'
+import { usePlayer } from '../../contexts/PlayerContext'
 import { api } from '../../service/api'
 import styles from '../../styles/episode.module.scss'
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString'
@@ -28,12 +28,15 @@ interface EpisodeProps {
 }
 
 export default function Episode({ episode }: EpisodeProps) {
-  const { play, togglePlay, currentEpisodeId, isPlaying } = useContext(PlayerContext)
+  const { play, togglePlay, currentEpisodeId, isPlaying } = usePlayer()
 
   const isEpisodePlaying = currentEpisodeId === episode.id && isPlaying
 
   return (
     <div className={styles.episodeContainer}>
+      <Head>
+        <title>{episode.title} | Podcastr</title>
+      </Head>
       <ReactTooltip effect="solid" backgroundColor="rgba(0, 0, 0, 0.7)" place="bottom" />
 
       <div className={styles.episode}>
@@ -44,7 +47,7 @@ export default function Episode({ episode }: EpisodeProps) {
             </button>
           </Link>
 
-          <Image width={700} height={160} src={episode.thumbnail} objectFit="cover" />
+          <Image priority width={700} height={160} src={episode.thumbnail} objectFit="cover" />
 
           <button
             data-tip={isEpisodePlaying ? 'Pausar episódio' : 'Tocar episódio'}
